@@ -194,12 +194,16 @@ event and do your own custom submission:
       form.appendChild(button);
 
       Polymer.clientSupportsFormValidationUI = true;
-      form.addEventListener('submit', function(event) {
-        // Oh good! We don't handle `required` correctly.
-        Polymer.clientSupportsFormValidationUI = false;
-        event.preventDefault();
-      });
-      button.click();
+      var match = /Version\/(\d+\.\d+).*Safari/.exec(window.navigator.userAgent),
+          version = match && parseFloat(match[1]);
+      if (match && version < 10.1) {
+        form.addEventListener('submit', function(event) {
+          // Oh good! We don't handle `required` correctly.
+          Polymer.clientSupportsFormValidationUI = false;
+          event.preventDefault();
+        });
+        button.click();
+      }
     },
 
     ready: function() {
